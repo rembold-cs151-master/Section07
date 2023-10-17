@@ -16,8 +16,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -51,6 +54,8 @@ simulating a very small portion of the classic arcade game Pacman</li>
 <li>Getting Pacman to “eat” the pills as he moves</li>
 <li>(Optional) Getting Pacman’s mouth to gobble as he moves</li>
 </ul></li>
+<li>These same tasks will also prove highly valuable when working
+through the Breakout Project!</li>
 </ul>
 </section>
 <section id="part-a-creating-pacman" class="slide level2">
@@ -77,12 +82,12 @@ properly centered</li>
 <h2>Part A: Pacman Created</h2>
 <pre ><code class="mypython" style="max-height:800px">def create_pacman():
     pacman = GArc(
-        GW_WIDTH / 2 - PACMAN_RADIUS,
-        GW_HEIGHT / 2 - PACMAN_RADIUS,
-        2 * PACMAN_RADIUS,
-        2 * PACMAN_RADIUS,
-        45,
-        270,
+        GW_WIDTH / 2 - PACMAN_RADIUS,  #centered x
+        GW_HEIGHT / 2 - PACMAN_RADIUS, #centered y
+        2 * PACMAN_RADIUS,             #width
+        2 * PACMAN_RADIUS,             #height
+        45,                            #starting angle
+        270,                           #sweep angle
     )
     pacman.set_filled(True)
     pacman.set_fill_color("yellow")
@@ -126,9 +131,8 @@ wall</li>
 </ul></li>
 <li>Update the movement in your <code class="python">step</code>
 function to use this new variable</li>
-<li>Add a conditional check to see if the right edge of Pacman has
-extended beyond the right edge of the screen, and reverse the direction
-if so</li>
+<li>Add a conditional check to see if an edge of Pacman has extended
+beyond an edge of the screen, and reverse the direction if so</li>
 <li>You can also use the <code class="python">set_starting_angle</code>
 and <code class="python">get_starting_angle</code> methods for
 <code class="python">GArc</code>s to flip Pacman around to face the
@@ -154,16 +158,212 @@ gw.set_interval(step, 20)</code></pre>
 <section id="part-c-pacman-bounced" class="slide level2">
 <h2>Part C: Pacman Bounced</h2>
 <pre ><code class="mypython" style="max-height: 800px; font-size:.8em">def step():
-    pacman.move(gw.vel, 0)
+    pacman.move(gw.dx, 0)
     if (pacman.get_x() + 2 * PACMAN_RADIUS > GW_WIDTH #right edge
         or pacman.get_x() < 0 #left edge
        ):
-        gw.vel *= -1 #flip it
+        gw.dx *= -1 #flip it
         pacman.set_start_angle(pacman.get_start_angle() + 180)
 
 pacman = create_pacman()
-gw.vel = PACMAN_SPEED
+gw.dx = PACMAN_SPEED
 gw.set_interval(step, 20)</code></pre>
+</section>
+<section id="part-d-hungry-pacman" class="slide level2">
+<h2>Part D: Hungry Pacman</h2>
+<ul>
+<li>At the moment Pacman just moves over the yellow pills: we’d like to
+change that so that they actually disappear as Pacman moves over
+them</li>
+<li>You can remove anything from the <code class="python">GWindow</code>
+with <code class="python">gw.remove(obj)</code>, but that requires you
+to have a variable <code class="python">obj</code> that was assigned
+your particular <code class="python">GObject</code>.
+<ul>
+<li>Here we have named variables for pacman
+(<code class="python">pacman</code>) and for the background colored
+rectangle (<code class="python">bg</code>), but not the pills!</li>
+</ul></li>
+<li>So a method is needed to retrieve a
+<code class="python">GObject</code> that has already been added to the
+window
+<ul>
+<li>The most obvious of these is the
+<code class="python">.get_element_at(x,y)</code> method for
+GWindows.</li>
+</ul></li>
+</ul>
+</section>
+<section id="part-d-getting-elements" class="slide level2">
+<h2>Part D: Getting Elements</h2>
+<ul>
+<li>You provide <code class="python">.get_element_at(x,y)</code> a pair
+of coordinates, <span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span>
+<ul>
+<li>If there is a <code class="python">GObject</code> at that location,
+it will return it to you! So save that object in a variable!</li>
+<li>If there is no object at that location, it will return
+<code class="python">None</code></li>
+</ul></li>
+<li>You can then use any returned object exactly as you would had you
+assigned it to a variable initially, including removing it from the
+window!</li>
+</ul>
+<pre ><code class="mypython">>>> leftmost_pill = gw.get_element_at(20, 200)
+>>> print(leftmost_pill)
+GOval(20, 190.0, 20, 20)</code></pre>
+</section>
+<section id="part-d-pacmans-mouth" class="slide level2">
+<h2>Part D: Pacman’s Mouth</h2>
+<div class="cols">
+<div class="col" style="font-size:.85em; flex-grow:1.25">
+<ul>
+<li>Here we want to remove a pill whenever it gets halfway into Pacman’s
+mouth, as indicated in the image to the right.</li>
+<li>The x and y values of this position will depend on the current
+position of Pacman, so think about how you could work out where this
+point is in the window.</li>
+<li>Keep in mind that the object (if any) returned by
+<code class="python">.get_element_at</code> is just the topmost object
+found at that location. So often times you might want to do a comparison
+afterwards with an <code class="python">if</code> statement to ensure it
+is the object you are interested in.</li>
+</ul>
+</div>
+<div class="col">
+<p><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="162.22908mm"
+   height="183.98962mm"
+   viewBox="0 0 162.22908 183.98962"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="pacman_mouth.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.99528652"
+     inkscape:cx="237.62002"
+     inkscape:cy="336.58649"
+     inkscape:window-width="1680"
+     inkscape:window-height="1020"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-301.41412,-111.45934)">
+    <path
+       style="opacity:1;fill:#ffe792;stroke:none;stroke-width:1.79927;stroke-linecap:round;stroke-linejoin:round"
+       id="path1"
+       sodipodi:type="arc"
+       sodipodi:cx="383.06824"
+       sodipodi:cy="192.31602"
+       sodipodi:rx="80"
+       sodipodi:ry="80"
+       sodipodi:start="0.78539816"
+       sodipodi:end="5.4977871"
+       sodipodi:arc-type="slice"
+       d="m 439.63678,248.88457 a 80,80 0 0 1 -113.13708,0 80,80 0 0 1 -1e-5,-113.13709 80,80 0 0 1 113.13709,0 l -56.56854,56.56854 z" />
+    <rect
+       style="opacity:1;fill:none;stroke:#a6e22e;stroke-width:1.79927;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.79927, 7.19708;stroke-dashoffset:0"
+       id="rect1"
+       width="160.42981"
+       height="159.6234"
+       x="302.31375"
+       y="112.35898" />
+    <circle
+       style="opacity:1;fill:none;stroke:#f92672;stroke-width:1.79927;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path2"
+       cx="426.17368"
+       cy="191.40729"
+       r="4.5985045" />
+    <g
+       id="path3"
+       transform="matrix(1.7992688,0,0,1.7992688,-240.91092,-89.085981)">
+      <path
+         style="color:#000000;fill:#ae81ff;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+         d="m 374.12305,162.22461 a 0.5,0.5 0 0 0 -0.38086,0.0156 0.5,0.5 0 0 0 -0.24219,0.66602 c 1.29966,2.78883 4.96352,9.48438 7.30664,16.88672 2.34312,7.40233 3.30649,15.41915 -0.57422,20.80078 a 0.5,0.5 0 0 0 0.11328,0.69727 0.5,0.5 0 0 0 0.69727,-0.11329 c 4.1981,-5.82176 3.09803,-14.16279 0.7168,-21.68554 -2.38124,-7.52275 -6.10006,-14.32007 -7.35352,-17.00977 a 0.5,0.5 0 0 0 -0.2832,-0.25781 z"
+         id="path9" />
+      <g
+         id="g6">
+        <g
+           id="path6">
+          <path
+             style="color:#000000;fill:#ae81ff;fill-rule:evenodd;-inkscape-stroke:none"
+             d="m 372.73383,160.07917 4.09292,2.86419 -4.53203,2.11203 z"
+             id="path7" />
+          <path
+             style="color:#000000;fill:#ae81ff;fill-rule:evenodd;-inkscape-stroke:none"
+             d="m 372.45312,159.47461 -0.0508,0.57617 -0.49023,5.55078 5.57812,-2.59961 z m 0.5625,1.20898 3.14649,2.20118 -3.48438,1.625 z"
+             id="path8" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="text3"
+       style="font-weight:bold;font-size:4.9389px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Bold';fill:#ae81ff;stroke-linecap:round;stroke-linejoin:round"
+       aria-label="Check for&#10;pill here!"
+       transform="matrix(1.7992688,0,0,1.7992688,-240.91092,-89.085981)">
+      <path
+         d="m 359.03679,202.82261 q 0.37738,0 0.64079,0.10131 0.26594,0.0988 0.48629,0.28114 l -0.40777,0.49136 q -0.14437,-0.11904 -0.31913,-0.18743 -0.17476,-0.0709 -0.37992,-0.0709 -0.22035,0 -0.40271,0.12664 -0.18236,0.12411 -0.29127,0.39511 -0.10891,0.26848 -0.10891,0.69905 0,0.63319 0.22795,0.92193 0.23049,0.2862 0.59014,0.2862 0.26341,0 0.43817,-0.0988 0.17476,-0.0988 0.32166,-0.21528 l 0.37738,0.48122 q -0.19755,0.19503 -0.48629,0.33433 -0.28873,0.1393 -0.69651,0.1393 -0.47616,0 -0.84595,-0.21022 -0.36725,-0.21275 -0.57747,-0.62306 -0.20768,-0.41284 -0.20768,-1.01564 0,-0.5876 0.21528,-0.99791 0.21782,-0.41031 0.59014,-0.62306 0.37231,-0.21529 0.83581,-0.21529 z m 2.38081,-0.23808 v 1.41329 q 0.33685,-0.35459 0.79022,-0.35459 0.35965,0 0.54961,0.21022 0.18996,0.21022 0.18996,0.59267 v 1.97556 h -0.80036 V 204.669 q 0,-0.24315 -0.0557,-0.33939 -0.0532,-0.0962 -0.20262,-0.0962 -0.12664,0 -0.24315,0.0887 -0.11397,0.0861 -0.22794,0.23808 v 1.86159 h -0.80036 v -3.75863 z m 2.93294,2.72526 q 0.0405,0.32926 0.21529,0.47363 0.17476,0.14183 0.43057,0.14183 0.18489,0 0.35712,-0.0608 0.17223,-0.0608 0.33179,-0.1621 l 0.32167,0.43564 q -0.18996,0.16209 -0.46097,0.26594 -0.26847,0.10384 -0.61293,0.10384 -0.46096,0 -0.77249,-0.18236 -0.31153,-0.18489 -0.46857,-0.50655 -0.15703,-0.32166 -0.15703,-0.73957 0,-0.39765 0.15197,-0.72184 0.15197,-0.32673 0.44323,-0.51922 0.2938,-0.19502 0.71678,-0.19502 0.38498,0 0.66612,0.16463 0.28367,0.16463 0.43816,0.47363 0.15704,0.30899 0.15704,0.7421 0,0.0684 -0.005,0.1469 -0.003,0.0785 -0.0101,0.1393 z m 0.49643,-1.12961 q -0.21529,0 -0.34699,0.15449 -0.13171,0.1545 -0.15957,0.49389 h 0.98778 q -0.003,-0.2938 -0.11397,-0.47109 -0.11144,-0.17729 -0.36725,-0.17729 z m 3.27487,1.69695 q 0.16463,0 0.309,-0.0633 0.1469,-0.0658 0.29127,-0.16716 l 0.35712,0.50655 q -0.1773,0.15197 -0.43311,0.25328 -0.25327,0.10131 -0.56734,0.10131 -0.4331,0 -0.74463,-0.17729 -0.31153,-0.17983 -0.47869,-0.49643 -0.16717,-0.31912 -0.16717,-0.73956 0,-0.42044 0.1697,-0.74717 0.17223,-0.32926 0.48629,-0.51669 0.3166,-0.18742 0.7497,-0.18742 0.30646,0 0.54454,0.0861 0.24062,0.0836 0.44071,0.25075 l -0.34699,0.48122 q -0.13677,-0.0962 -0.28874,-0.14943 -0.15196,-0.0532 -0.31659,-0.0532 -0.27101,0 -0.43817,0.19249 -0.16463,0.18996 -0.16463,0.64333 0,0.29633 0.0785,0.46856 0.0785,0.16969 0.21275,0.24314 0.13677,0.0709 0.30647,0.0709 z m 2.41373,-3.29766 v 3.84221 h -0.80035 v -3.75863 z m 1.75268,1.15241 -0.88394,1.1904 0.95739,1.4994 h -0.9118 l -0.88394,-1.47408 0.88394,-1.21572 z m 5.23777,-1.15241 q 0.2938,0 0.51922,0.0481 0.22541,0.0456 0.40271,0.12157 l -0.22036,0.52175 q -0.1393,-0.0532 -0.2862,-0.076 -0.1469,-0.0253 -0.29127,-0.0253 -0.23808,0 -0.34192,0.0861 -0.10131,0.0861 -0.10131,0.2862 v 0.35965 h 0.87634 l -0.0887,0.55468 h -0.78769 v 1.96543 h -0.79529 v -1.96543 h -0.56481 v -0.55468 h 0.56481 v -0.39005 q 0,-0.26594 0.12664,-0.47616 0.12664,-0.21022 0.37485,-0.33179 0.24821,-0.1241 0.61293,-0.1241 z m 2.49225,1.06376 q 0.41537,0 0.70664,0.17729 0.29127,0.1773 0.44577,0.49896 0.15449,0.31913 0.15449,0.7497 0,0.67371 -0.34445,1.05616 -0.34446,0.38245 -0.96245,0.38245 -0.618,0 -0.96246,-0.37738 -0.34445,-0.37738 -0.34445,-1.05617 0,-0.42803 0.1545,-0.7497 0.15703,-0.32166 0.4483,-0.50148 0.2938,-0.17983 0.70411,-0.17983 z m 0,0.59013 q -0.24568,0 -0.36472,0.20263 -0.11651,0.20008 -0.11651,0.63825 0,0.44577 0.11651,0.64586 0.11904,0.20009 0.36472,0.20009 0.24567,0 0.36218,-0.20009 0.11904,-0.20009 0.11904,-0.65092 0,-0.43564 -0.11904,-0.63573 -0.11651,-0.20009 -0.36218,-0.20009 z m 1.89957,2.18832 v -0.53695 h 0.35459 v -1.62097 h -0.35459 v -0.53188 h 0.96499 l 0.1469,0.60533 q 0.14437,-0.34699 0.36725,-0.51669 0.22542,-0.16969 0.54961,-0.16969 0.13677,0 0.24315,0.0228 0.10638,0.0203 0.20009,0.0583 l -0.14944,1.12455 h -0.50148 V 204.36 q -0.22795,0.0405 -0.40018,0.24821 -0.17223,0.20516 -0.26594,0.50656 v 0.76996 h 0.53188 v 0.53695 z"
+         id="path4" />
+      <path
+         d="m 359.06718,209.81685 q 0.35206,0 0.56734,0.17476 0.21529,0.17477 0.31407,0.49389 0.10131,0.31913 0.10131,0.7573 0,0.41538 -0.12157,0.7421 -0.12158,0.3242 -0.35206,0.51162 -0.23048,0.1849 -0.55974,0.1849 -0.39258,0 -0.63826,-0.28114 v 1.23346 l -0.80035,0.0836 v -3.81182 h 0.70917 l 0.0355,0.3014 q 0.16463,-0.21022 0.35965,-0.29887 0.19503,-0.0912 0.38498,-0.0912 z m -0.24821,0.59014 q -0.1393,0 -0.24568,0.0836 -0.10637,0.0836 -0.19502,0.22795 v 1.13468 q 0.0836,0.12411 0.17476,0.18236 0.0937,0.0582 0.22035,0.0582 0.21276,0 0.3318,-0.19249 0.11904,-0.19502 0.11904,-0.64839 0,-0.33432 -0.0481,-0.51668 -0.0481,-0.18489 -0.1393,-0.25581 -0.0912,-0.0734 -0.21782,-0.0734 z m 2.95828,-1.90971 q 0.20769,0 0.33939,0.12917 0.1317,0.12917 0.1317,0.32166 0,0.19249 -0.1317,0.3242 -0.1317,0.12917 -0.33939,0.12917 -0.21022,0 -0.34446,-0.12917 -0.1317,-0.13171 -0.1317,-0.3242 0,-0.19249 0.1317,-0.32166 0.13424,-0.12917 0.34446,-0.12917 z m 0.48376,1.40822 v 2.14272 h 0.68385 v 0.54708 h -2.24657 v -0.54708 h 0.76236 v -1.59564 h -0.73703 v -0.54708 z m 2.79871,-1.06883 v 2.91269 q 0,0.16209 0.0912,0.23301 0.0937,0.0684 0.25581,0.0684 0.10384,0 0.20009,-0.0228 0.0962,-0.0253 0.17982,-0.0583 l 0.1925,0.53441 q -0.13677,0.0709 -0.32926,0.12411 -0.1925,0.0532 -0.4483,0.0532 -0.4863,0 -0.71425,-0.27861 -0.22795,-0.28114 -0.22795,-0.75223 v -2.26683 h -0.79275 v -0.54708 z m 3.03932,0 v 2.91269 q 0,0.16209 0.0912,0.23301 0.0937,0.0684 0.25581,0.0684 0.10385,0 0.20009,-0.0228 0.0962,-0.0253 0.17983,-0.0583 l 0.19249,0.53441 q -0.13677,0.0709 -0.32926,0.12411 -0.19249,0.0532 -0.4483,0.0532 -0.48629,0 -0.71424,-0.27861 -0.22795,-0.28114 -0.22795,-0.75223 v -2.26683 h -0.79276 v -0.54708 z m 5.47586,-0.0785 v 1.41328 q 0.33686,-0.35459 0.79022,-0.35459 0.35965,0 0.54961,0.21022 0.18996,0.21022 0.18996,0.59267 v 1.97556 h -0.80036 v -1.75267 q 0,-0.24315 -0.0557,-0.3394 -0.0532,-0.0962 -0.20262,-0.0962 -0.12664,0 -0.24314,0.0887 -0.11398,0.0861 -0.22795,0.23808 v 1.86158 h -0.80036 v -3.75863 z m 2.93294,2.72526 q 0.0405,0.32926 0.21529,0.47362 0.17476,0.14184 0.43057,0.14184 0.18489,0 0.35712,-0.0608 0.17223,-0.0608 0.33179,-0.16209 l 0.32167,0.43563 q -0.18996,0.1621 -0.46097,0.26594 -0.26847,0.10385 -0.61293,0.10385 -0.46096,0 -0.77249,-0.18236 -0.31153,-0.1849 -0.46857,-0.50656 -0.15703,-0.32166 -0.15703,-0.73957 0,-0.39764 0.15197,-0.72184 0.15197,-0.32672 0.44323,-0.51921 0.2938,-0.19503 0.71678,-0.19503 0.38498,0 0.66612,0.16463 0.28367,0.16463 0.43816,0.47363 0.15704,0.309 0.15704,0.7421 0,0.0684 -0.005,0.1469 -0.003,0.0785 -0.0101,0.13931 z m 0.49643,-1.12962 q -0.21529,0 -0.34699,0.1545 -0.13171,0.1545 -0.15957,0.49389 h 0.98778 q -0.003,-0.2938 -0.11397,-0.4711 -0.11144,-0.17729 -0.36725,-0.17729 z m 1.87425,2.2415 v -0.53695 h 0.35459 v -1.62097 h -0.35459 v -0.53188 h 0.96498 l 0.1469,0.60533 q 0.14437,-0.34699 0.36726,-0.51668 0.22541,-0.1697 0.54961,-0.1697 0.13677,0 0.24314,0.0228 0.10638,0.0203 0.20009,0.0582 l -0.14943,1.12455 h -0.50149 v -0.49642 q -0.22795,0.0405 -0.40018,0.24821 -0.17223,0.20515 -0.26594,0.50655 v 0.76996 h 0.53188 v 0.53695 z m 3.70798,-1.11188 q 0.0405,0.32926 0.21528,0.47362 0.17476,0.14184 0.43057,0.14184 0.18489,0 0.35712,-0.0608 0.17223,-0.0608 0.3318,-0.16209 l 0.32166,0.43563 q -0.18996,0.1621 -0.46097,0.26594 -0.26847,0.10385 -0.61293,0.10385 -0.46096,0 -0.77249,-0.18236 -0.31153,-0.1849 -0.46856,-0.50656 -0.15704,-0.32166 -0.15704,-0.73957 0,-0.39764 0.15197,-0.72184 0.15197,-0.32672 0.44324,-0.51921 0.2938,-0.19503 0.71677,-0.19503 0.38498,0 0.66612,0.16463 0.28367,0.16463 0.43817,0.47363 0.15703,0.309 0.15703,0.7421 0,0.0684 -0.005,0.1469 -0.003,0.0785 -0.0101,0.13931 z m 0.49642,-1.12962 q -0.21529,0 -0.34699,0.1545 -0.1317,0.1545 -0.15957,0.49389 h 0.98778 q -0.003,-0.2938 -0.11397,-0.4711 -0.11144,-0.17729 -0.36725,-0.17729 z m 3.4395,-1.26892 -0.10131,2.21871 h -0.64585 l -0.10385,-2.21871 z m -0.4255,2.67967 q 0.19249,0 0.32419,0.13677 0.13424,0.13424 0.13424,0.32166 0,0.18743 -0.13424,0.3242 -0.1317,0.13424 -0.32419,0.13424 -0.18743,0 -0.3242,-0.13424 -0.13423,-0.13677 -0.13423,-0.3242 0,-0.18742 0.13423,-0.32166 0.13677,-0.13677 0.3242,-0.13677 z"
+         id="path5" />
+    </g>
+  </g>
+</svg>
+</p>
+</div>
+</div>
+</section>
+<section id="part-d-hunger-satiated" class="slide level2">
+<h2>Part D: Hunger Satiated</h2>
+<pre ><code class="mypython" style="max-height:850px;">def step():
+    ...
+    # Adjusting for which side mouth is on
+    if gw.dx > 0:
+        x = pacman.get_x() + PACMAN_RADIUS * 1.5
+    else:
+        x = pacman.get_x() + PACMAN_RADIUS * 0.5
+    y = pacman.get_y() + PACMAN_RADIUS
+    # Getting anything there
+    obj = gw.get_element_at(x,y)
+    # Removing that thing if present and if it isn't the bg
+    if obj is not None and obj is not bg:
+        gw.remove(obj)
+    ...</code></pre>
+</section>
+<section id="challenge" class="slide level2">
+<h2><i class='fa-solid fa-trophy fa-beat'></i> Challenge!</h2>
+<ul>
+<li>Currently, Pacman’s mouth doesn’t move</li>
+<li>Add code to cause Pacman’s mouth to repeatedly open and close by
+adjusting the starting angle and sweep angle every step</li>
+<li>You’ll need to adjust both angles in tandem to achieve a symmetric
+opening and closing of the mouth</li>
+</ul>
 </section>
     </div>
   </div>
