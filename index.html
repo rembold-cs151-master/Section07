@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Jed Rembold and Eric Roberts">
-  <title>Title</title>
+  <title>Section 07: Breaking Out Pacman</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -16,11 +16,8 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
+    ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -36,16 +33,137 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Title</h1>
+  <h1 class="title">Section 07: Breaking Out Pacman</h1>
   <p class="author">Jed Rembold and Eric Roberts</p>
-  <p class="date">Date</p>
+  <p class="date">Week of October 16th</p>
 </section>
 
-<section id="problem-1" class="slide level2">
-<h2>Problem 1</h2>
+<section id="pacman" class="slide level2">
+<h2>Pacman</h2>
 <ul>
-<li>Is here!</li>
+<li>This week all problems will revolve around a single situation:
+simulating a very small portion of the classic arcade game Pacman</li>
+<li>Tasks will thus include:
+<ul>
+<li>Creating and adding a Pacman shape to the window</li>
+<li>Getting Pacman to move</li>
+<li>Implementing bouncing off the walls</li>
+<li>Getting Pacman to “eat” the pills as he moves</li>
+<li>(Optional) Getting Pacman’s mouth to gobble as he moves</li>
+</ul></li>
 </ul>
+</section>
+<section id="part-a-creating-pacman" class="slide level2">
+<h2>Part A: Creating Pacman</h2>
+<ul>
+<li>The template file automatically creates the scene to below when
+run</li>
+<li>Your initial task is to add the classic yellow Pacman shape to the
+center of the screen
+<ul>
+<li>Consists of a circle missing a 90 deg segment centered on the
+positive x-axis</li>
+</ul></li>
+<li>Recall when working with <code class="python">GArc</code>s how you
+need to specify the location! That will be important for getting Pacman
+properly centered</li>
+</ul>
+<div class="r-stack">
+<p><img data-src="./images/pacman_start.png" /></p>
+<p><img data-src="./images/pacman_present.png" class="fragment" /></p>
+</div>
+</section>
+<section id="part-a-pacman-created" class="slide level2">
+<h2>Part A: Pacman Created</h2>
+<pre ><code class="mypython" style="max-height:800px">def create_pacman():
+    pacman = GArc(
+        GW_WIDTH / 2 - PACMAN_RADIUS,
+        GW_HEIGHT / 2 - PACMAN_RADIUS,
+        2 * PACMAN_RADIUS,
+        2 * PACMAN_RADIUS,
+        45,
+        270,
+    )
+    pacman.set_filled(True)
+    pacman.set_fill_color("yellow")
+    return pacman
+
+pacman = create_pacman()
+gw.add(pacman)</code></pre>
+</section>
+<section id="part-b-moving-pacman" class="slide level2">
+<h2>Part B: Moving Pacman</h2>
+<ul>
+<li>The next task is to get Pacman moving!</li>
+<li>Create a <code class="python">step</code> callback function and
+define an interval event listener to call that function every 20 ms</li>
+<li>Each time the <code class="python">step</code> function is called,
+it should move Pacman forward (to the right) by the number of pixels
+indicated by the provided constant</li>
+</ul>
+</section>
+<section id="part-b-pacman-moved" class="slide level2">
+<h2>Part B: Pacman Moved</h2>
+<pre ><code class="mypython" style="max-height:800px">def step():
+    pacman.move(PACMAN_SPEED, 0)
+
+gw.set_interval(step, 20)</code></pre>
+</section>
+<section id="part-c-bouncing-pacman" class="slide level2">
+<h2>Part C: Bouncing Pacman</h2>
+<div style="font-size:.9em">
+<ul>
+<li>Currently, Pacman will just move off the right side of the screen,
+which is not ideal. Instead we want Pacman to reverse direction at the
+wall</li>
+<li>Will thus need to keep track of Pacman’s current direction somehow
+<ul>
+<li>This will need to be updated or set within the
+<code class="python">step</code> callback function, so it
+<strong>must</strong> be added as an attribute to the
+<code class="python">GWindow</code>
+(<code class="python">gw</code>)</li>
+</ul></li>
+<li>Update the movement in your <code class="python">step</code>
+function to use this new variable</li>
+<li>Add a conditional check to see if the right edge of Pacman has
+extended beyond the right edge of the screen, and reverse the direction
+if so</li>
+<li>You can also use the <code class="python">set_starting_angle</code>
+and <code class="python">get_starting_angle</code> methods for
+<code class="python">GArc</code>s to flip Pacman around to face the
+other direction!</li>
+</ul>
+</div>
+</section>
+<section id="part-c-pseudo-bouncing" class="slide level2">
+<h2>Part C: Pseudo Bouncing</h2>
+<ul>
+<li>In pseudocode, you might have something like:</li>
+</ul>
+<pre ><code class="mypython">def step():
+    pacman.move(|||something involving the direction|||, 0)
+
+    if |||left or right edge of Pacman extends off screen|||:
+        |||reverse Pacman direction by switching direction variable value|||
+        |||turn Pacman around by changing starting angle of arc|||
+
+|||initialize direction variable|||
+gw.set_interval(step, 20)</code></pre>
+</section>
+<section id="part-c-pacman-bounced" class="slide level2">
+<h2>Part C: Pacman Bounced</h2>
+<pre ><code class="mypython" style="max-height: 800px; font-size:.8em">def step():
+    pacman.move(gw.vel, 0)
+    if (pacman.get_x() + 2 * PACMAN_RADIUS > GW_WIDTH #right edge
+        or pacman.get_x() < 0 #left edge
+       ):
+        gw.vel *= -1 #flip it
+        pacman.set_start_angle(pacman.get_start_angle() + 180)
+
+pacman = create_pacman()
+gw.vel = PACMAN_SPEED
+gw.set_interval(step, 20)</code></pre>
 </section>
     </div>
   </div>
@@ -64,9 +182,14 @@
   <!--<script src="./js/revealjs/../other_plugins/reveald3/reveald3.js"></script>,-->
   <script src="./js/revealjs/plugin/math/math.js"></script>
   <script src="./js/revealjs/plugin/highlight/highlight.js"></script>
+  <script src="./js/revealjs/../python_language.js"></script>
+
+  // Font Awesome Characters
+  <script src="https://kit.fontawesome.com/4bc05635b0.js" crossorigin="anonymous"></script>
 
   // Code Tracing
   <script src="./js/revealjs/../codetrace.js"></script>
+
 
   <script>
 
@@ -176,6 +299,11 @@
 		  <!--},-->
 		  CommonHTML: {scale: 80},
 		},
+          highlight: {
+            beforeHighlight: hljs => hljs.registerLanguage("mypython", function(hljs) {
+              console.log(mypythondef);
+              return mypythondef(hljs); } )
+          },
         // reveal.js plugins
         plugins: [
 		  RevealMath,
@@ -214,5 +342,17 @@
 		],
       });
     </script>
+  <script>
+  // This is admitedly a very hacky way to achieve my pseudo code highlighting, but it works?
+    function remove_bars() {
+      var pseudoBlocks = document.getElementsByClassName("hljs-pseudo");
+      console.log(pseudoBlocks);
+      for ( var i = 0; i < pseudoBlocks.length; i++) {
+        pseudoBlocks[i].innerHTML = pseudoBlocks[i].innerHTML.replaceAll("\|\|\|", "");
+      }
+      }
+    // omg this is even more hacky now, but I need this to run after hljs has done its thing
+    setTimeout(remove_bars, 100);
+  </script>
     </body>
 </html>
