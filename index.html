@@ -35,7 +35,7 @@
 <section id="title-slide">
   <h1 class="title">Section 07: Breaking Out Pacman</h1>
   <p class="author">Jed Rembold and Eric Roberts</p>
-  <p class="date">Week of October 16th</p>
+  <p class="date">Week of March 4th</p>
 <div class="titlelinks">
 <a title="Template Repo" href="https://github.com/rembold-cs151-master/Section07"><i class="fa-solid fa-folder-tree"></i></a>
 <a title="Template Zip"  href="https://github.com/rembold-cs151-master/Section07/zipball/master/"><i class="fa-solid fa-file-zipper"></i></a>
@@ -82,7 +82,7 @@ properly centered</li>
 </section>
 <section id="part-a-pacman-created" class="slide level2">
 <h2>Part A: Pacman Created</h2>
-<pre ><code class="mypython" style="max-height:800px">def create_pacman():
+<pre ><code class="mypython" style="max-height:900px">def create_pacman():
     pacman = GArc(
         GW_WIDTH / 2 - PACMAN_RADIUS,  #centered x
         GW_HEIGHT / 2 - PACMAN_RADIUS, #centered y
@@ -98,8 +98,9 @@ properly centered</li>
 pacman = create_pacman()
 gw.add(pacman)</code></pre>
 </section>
-<section id="part-b-moving-pacman" class="slide level2">
-<h2>Part B: Moving Pacman</h2>
+<section id="part-b-moving-pacman" class="slide level2"
+data-state="MovePacmanTrace">
+<h2 data-state="MovePacmanTrace">Part B: Moving Pacman</h2>
 <ul>
 <li>The next task is to get Pacman moving!</li>
 <li>Create a <code class="python">step</code> callback function and
@@ -108,6 +109,10 @@ define an interval event listener to call that function every 20 ms</li>
 it should move Pacman forward (to the right) by the number of pixels
 indicated by the provided constant</li>
 </ul>
+<div id="PacmanMoveCanvas" class="CTCanvas"
+style="border: none; background-color:black; width:900px; height:400px; margin:auto;">
+
+</div>
 </section>
 <section id="part-b-pacman-moved" class="slide level2">
 <h2>Part B: Pacman Moved</h2>
@@ -128,8 +133,8 @@ wall</li>
 <li>This will need to be updated or set within the
 <code class="python">step</code> callback function, so it
 <strong>must</strong> be added as an attribute to the
-<code class="python">GWindow</code>
-(<code class="python">gw</code>)</li>
+<code class="python">GWindow</code> (called
+<code class="python">gw</code> here)</li>
 </ul></li>
 <li>Update the movement in your <code class="python">step</code>
 function to use this new variable</li>
@@ -140,6 +145,14 @@ and <code class="python">get_starting_angle</code> methods for
 <code class="python">GArc</code>s to flip Pacman around to face the
 other direction!</li>
 </ul>
+</div>
+</section>
+<section id="part-c-bouncing-visualized" class="slide level2"
+data-state="BouncePacmanTrace">
+<h2 data-state="BouncePacmanTrace">Part C: Bouncing Visualized</h2>
+<div id="PacmanBounceCanvas" class="CTCanvas"
+style="border: none; background-color:black; width:900px; height:400px; margin:auto;">
+
 </div>
 </section>
 <section id="part-c-pseudo-bouncing" class="slide level2">
@@ -182,7 +195,7 @@ with <code class="python">gw.remove(obj)</code>, but that requires you
 to have a variable <code class="python">obj</code> that was assigned
 your particular <code class="python">GObject</code>.
 <ul>
-<li>Here we have named variables for pacman
+<li>Here we have named variables for Pacman
 (<code class="python">pacman</code>) and for the background colored
 rectangle (<code class="python">bg</code>), but not the pills!</li>
 </ul></li>
@@ -340,6 +353,14 @@ is the object you are interested in.</li>
 </div>
 </div>
 </section>
+<section id="part-d-hunger-visualized" class="slide level2"
+data-state="HungerPacmanTrace">
+<h2 data-state="HungerPacmanTrace">Part D: Hunger Visualized</h2>
+<div id="PacmanHungerCanvas" class="CTCanvas"
+style="border: none; background-color:black; width:900px; height:400px; margin:auto;">
+
+</div>
+</section>
 <section id="part-d-hunger-satiated" class="slide level2">
 <h2>Part D: Hunger Satiated</h2>
 <pre ><code class="mypython" style="max-height:850px;">def step():
@@ -357,8 +378,11 @@ is the object you are interested in.</li>
         gw.remove(obj)
     ...</code></pre>
 </section>
-<section id="challenge" class="slide level2">
-<h2><i class='fa-solid fa-trophy fa-beat'></i> Challenge!</h2>
+<section id="challenge" class="slide level2"
+data-state="RavenousPacmanTrace">
+<h2
+data-state="RavenousPacmanTrace"><i class='fa-solid fa-trophy fa-beat'></i>
+Challenge!</h2>
 <ul>
 <li>Currently, Pacman’s mouth doesn’t move</li>
 <li>Add code to cause Pacman’s mouth to repeatedly open and close by
@@ -366,6 +390,10 @@ adjusting the starting angle and sweep angle every step</li>
 <li>You’ll need to adjust both angles in tandem to achieve a symmetric
 opening and closing of the mouth</li>
 </ul>
+<div id="PacmanRavenousCanvas" class="CTCanvas"
+style="border: none; background-color:black; width:900px; height:400px; margin:auto;">
+
+</div>
 </section>
     </div>
   </div>
@@ -392,6 +420,12 @@ opening and closing of the mouth</li>
   // Code Tracing
   <script src="./js/revealjs/../codetrace.js"></script>
 
+  <script src="./js/revealjs/../../js/pgl.js"></script>
+
+  <script src="MovePacmanTrace.js"></script>
+  <script src="BouncePacmanTrace.js"></script>
+  <script src="HungerPacmanTrace.js"></script>
+  <script src="RavenousPacmanTrace.js"></script>
 
   <script>
 
@@ -543,6 +577,10 @@ opening and closing of the mouth</li>
             // { src: "./js/revealjs/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"./js/revealjs/plugin/title-footer/title-footer.css"}); } },
 		],
       });
+  Reveal.addEventListener("MovePacmanTrace", MovePacmanDemo);
+  Reveal.addEventListener("BouncePacmanTrace", BouncePacmanDemo);
+  Reveal.addEventListener("HungerPacmanTrace", HungerPacmanDemo);
+  Reveal.addEventListener("RavenousPacmanTrace", RavenousPacmanDemo);
     </script>
   <script>
   // This is admitedly a very hacky way to achieve my pseudo code highlighting, but it works?

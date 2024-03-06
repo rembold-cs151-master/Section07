@@ -1,7 +1,7 @@
 ---
 title: "Section 07: Breaking Out Pacman"
 author: Jed Rembold and Eric Roberts
-date: "Week of October 16th"
+date: "Week of March 4th"
 slideNumber: true
 theme: monokai
 highlightjs-theme: monokai
@@ -11,6 +11,13 @@ transition: fade
 css:
   - css/codetrace.css
   - css/roberts.css
+tracejs:
+  - MovePacman
+  - BouncePacman
+  - HungerPacman
+  - RavenousPacman
+extrajs:
+  - js/pgl.js
 content_url: https://github.com/rembold-cs151-master/Section07
 ---
 
@@ -39,7 +46,7 @@ content_url: https://github.com/rembold-cs151-master/Section07
 :::
 
 ## Part A: Pacman Created
-```{.mypython style='max-height:800px'}
+```{.mypython style='max-height:900px'}
 def create_pacman():
     pacman = GArc(
         GW_WIDTH / 2 - PACMAN_RADIUS,  #centered x
@@ -57,10 +64,13 @@ pacman = create_pacman()
 gw.add(pacman)
 ```
 
-## Part B: Moving Pacman
+## Part B: Moving Pacman {data-state="MovePacmanTrace"}
 - The next task is to get Pacman moving!
 - Create a `step` callback function and define an interval event listener to call that function every 20 ms
 - Each time the `step` function is called, it should move Pacman forward (to the right) by the number of pixels indicated by the provided constant
+
+<div id="PacmanMoveCanvas" class="CTCanvas" 
+  style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
 
 
 ## Part B: Pacman Moved
@@ -76,12 +86,15 @@ gw.set_interval(step, 20)
 :::{style='font-size:.9em'}
 - Currently, Pacman will just move off the right side of the screen, which is not ideal. Instead we want Pacman to reverse direction at the wall
 - Will thus need to keep track of Pacman's current direction somehow
-  - This will need to be updated or set within the `step` callback function, so it **must** be added as an attribute to the `GWindow` (`gw`)
+  - This will need to be updated or set within the `step` callback function, so it **must** be added as an attribute to the `GWindow` (called `gw` here)
 - Update the movement in your `step` function to use this new variable
 - Add a conditional check to see if an edge of Pacman has extended beyond an edge of the screen, and reverse the direction if so
 - You can also use the `set_starting_angle` and `get_starting_angle` methods for `GArc`s to flip Pacman around to face the other direction!
 :::
 
+## Part C: Bouncing Visualized {data-state="BouncePacmanTrace"}
+<div id="PacmanBounceCanvas" class="CTCanvas" 
+  style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
 
 ## Part C: Pseudo Bouncing
 - In pseudocode, you might have something like:
@@ -115,7 +128,7 @@ gw.set_interval(step, 20)
 ## Part D: Hungry Pacman
 - At the moment Pacman just moves over the yellow pills: we'd like to change that so that they actually disappear as Pacman moves over them
 - You can remove anything from the `GWindow` with `gw.remove(obj)`, but that requires you to have a variable `obj` that was assigned your particular `GObject`.
-  - Here we have named variables for pacman (`pacman`) and for the background colored rectangle (`bg`), but not the pills!
+  - Here we have named variables for Pacman (`pacman`) and for the background colored rectangle (`bg`), but not the pills!
 - So a method is needed to retrieve a `GObject` that has already been added to the window
   - The most obvious of these is the `.get_element_at(x,y)` method for GWindows.
 
@@ -146,6 +159,9 @@ GOval(20, 190.0, 20, 20)
 ::::
 ::::::
 
+## Part D: Hunger Visualized {data-state="HungerPacmanTrace"}
+<div id="PacmanHungerCanvas" class="CTCanvas" 
+  style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
 
 ## Part D: Hunger Satiated
 ```{.mypython style='max-height:850px;'}
@@ -165,7 +181,10 @@ def step():
     ...
 ```
 
-## <i class='fa-solid fa-trophy fa-beat'></i> Challenge!
+## <i class='fa-solid fa-trophy fa-beat'></i> Challenge! {data-state="RavenousPacmanTrace"}
 - Currently, Pacman's mouth doesn't move
 - Add code to cause Pacman's mouth to repeatedly open and close by adjusting the starting angle and sweep angle every step
 - You'll need to adjust both angles in tandem to achieve a symmetric opening and closing of the mouth
+
+<div id="PacmanRavenousCanvas" class="CTCanvas" 
+  style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
