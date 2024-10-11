@@ -1,13 +1,13 @@
 ---
 title: "Section 07: Breaking Out Pacman"
 author: Jed Rembold and Eric Roberts
-date: "Week of March 4th"
+date: "Week of October 14th"
 slideNumber: true
 theme: monokai
 highlightjs-theme: monokai
 width: 1920
 height: 1080
-transition: fade
+transition: slide
 css:
   - css/codetrace.css
   - css/roberts.css
@@ -32,7 +32,9 @@ content_url: https://github.com/rembold-cs151-master/Section07
   - (Optional) Getting Pacman's mouth to gobble as he moves
 - These same tasks will also prove highly valuable when working through the Breakout Project!
 
-## Part A: Creating Pacman
+# Part A: Creating Pacman
+
+## Creating the Shape
 - The template file automatically creates the scene to below when run
 - Your initial task is to add the classic yellow Pacman shape to the center of the screen
   - Consists of a circle missing a 90 deg segment centered on the positive x-axis
@@ -64,7 +66,8 @@ pacman = create_pacman()
 gw.add(pacman)
 ```
 
-## Part B: Moving Pacman {data-state="MovePacmanTrace"}
+# Part B: Moving Pacman
+## Moving in a single direction {data-state="MovePacmanTrace"}
 - The next task is to get Pacman moving!
 - Create a `step` callback function and define an interval event listener to call that function every 20 ms
 - Each time the `step` function is called, it should move Pacman forward (to the right) by the number of pixels indicated by the provided constant
@@ -82,7 +85,8 @@ gw.set_interval(step, 20)
 ```
 
 
-## Part C: Bouncing Pacman
+# Part C: Bouncing Pacman
+## Flipping at the edges
 :::{style='font-size:.9em'}
 - Currently, Pacman will just move off the right side of the screen, which is not ideal. Instead we want Pacman to reverse direction at the wall
 - Will thus need to keep track of Pacman's current direction somehow
@@ -92,11 +96,11 @@ gw.set_interval(step, 20)
 - You can also use the `set_starting_angle` and `get_starting_angle` methods for `GArc`s to flip Pacman around to face the other direction!
 :::
 
-## Part C: Bouncing Visualized {data-state="BouncePacmanTrace"}
+## Bouncing Visualized {data-state="BouncePacmanTrace"}
 <div id="PacmanBounceCanvas" class="CTCanvas" 
   style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
 
-## Part C: Pseudo Bouncing
+## Pseudo Bouncing
 - In pseudocode, you might have something like:
 ```mypython
 def step():
@@ -110,7 +114,7 @@ def step():
 gw.set_interval(step, 20)
 ```
 
-## Part C: Pacman Bounced
+## Pacman Bounced
 ```{.mypython style='max-height: 800px; font-size:.8em'}
 def step():
     pacman.move(gw.dx, 0)
@@ -125,7 +129,10 @@ gw.dx = PACMAN_SPEED
 gw.set_interval(step, 20)
 ```
 
-## Part D: Hungry Pacman
+
+# Part D: Hungry Pacman
+
+## Finding the Pills
 - At the moment Pacman just moves over the yellow pills: we'd like to change that so that they actually disappear as Pacman moves over them
 - You can remove anything from the `GWindow` with `gw.remove(obj)`, but that requires you to have a variable `obj` that was assigned your particular `GObject`.
   - Here we have named variables for Pacman (`pacman`) and for the background colored rectangle (`bg`), but not the pills!
@@ -133,7 +140,7 @@ gw.set_interval(step, 20)
   - The most obvious of these is the `.get_element_at(x,y)` method for GWindows.
 
 
-## Part D: Getting Elements
+## Getting Elements
 - You provide `.get_element_at(x,y)` a pair of coordinates, $x$ and $y$
   - If there is a `GObject` at that location, it will return it to you! So save that object in a variable!
   - If there is no object at that location, it will return `None`
@@ -144,7 +151,7 @@ gw.set_interval(step, 20)
 GOval(20, 190.0, 20, 20)
 ```
 
-## Part D: Pacman's Mouth
+## Pacman's Mouth
 ::::::cols
 ::::{.col style='font-size:.85em; flex-grow:1.25'}
 - Here we want to remove a pill whenever it gets halfway into Pacman's mouth, as indicated in the image to the right.
@@ -159,11 +166,11 @@ GOval(20, 190.0, 20, 20)
 ::::
 ::::::
 
-## Part D: Hunger Visualized {data-state="HungerPacmanTrace"}
+## Hunger Visualized {data-state="HungerPacmanTrace"}
 <div id="PacmanHungerCanvas" class="CTCanvas" 
   style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
 
-## Part D: Hunger Satiated
+## Hunger Satiated
 ```{.mypython style='max-height:850px;'}
 def step():
     ...
@@ -181,6 +188,7 @@ def step():
     ...
 ```
 
+# Bonus!
 ## <i class='fa-solid fa-trophy fa-beat'></i> Challenge! {data-state="RavenousPacmanTrace"}
 - Currently, Pacman's mouth doesn't move
 - Add code to cause Pacman's mouth to repeatedly open and close by adjusting the starting angle and sweep angle every step

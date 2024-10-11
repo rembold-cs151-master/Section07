@@ -16,8 +16,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -35,7 +38,7 @@
 <section id="title-slide">
   <h1 class="title">Section 07: Breaking Out Pacman</h1>
   <p class="author">Jed Rembold and Eric Roberts</p>
-  <p class="date">Week of March 4th</p>
+  <p class="date">Week of October 14th</p>
 <div class="titlelinks">
 <a title="Template Repo" href="https://github.com/rembold-cs151-master/Section07"><i class="fa-solid fa-folder-tree"></i></a>
 <a title="Template Zip"  href="https://github.com/rembold-cs151-master/Section07/zipball/master/"><i class="fa-solid fa-file-zipper"></i></a>
@@ -60,8 +63,13 @@ simulating a very small portion of the classic arcade game Pacman</li>
 through the Breakout Project!</li>
 </ul>
 </section>
-<section id="part-a-creating-pacman" class="slide level2">
-<h2>Part A: Creating Pacman</h2>
+<section>
+<section id="part-a-creating-pacman" class="title-slide slide level1">
+<h1>Part A: Creating Pacman</h1>
+
+</section>
+<section id="creating-the-shape" class="slide level2">
+<h2>Creating the Shape</h2>
 <ul>
 <li>The template file automatically creates the scene to below when
 run</li>
@@ -97,10 +105,15 @@ properly centered</li>
 
 pacman = create_pacman()
 gw.add(pacman)</code></pre>
+</section></section>
+<section>
+<section id="part-b-moving-pacman" class="title-slide slide level1">
+<h1>Part B: Moving Pacman</h1>
+
 </section>
-<section id="part-b-moving-pacman" class="slide level2"
+<section id="moving-in-a-single-direction" class="slide level2"
 data-state="MovePacmanTrace">
-<h2 data-state="MovePacmanTrace">Part B: Moving Pacman</h2>
+<h2 data-state="MovePacmanTrace">Moving in a single direction</h2>
 <ul>
 <li>The next task is to get Pacman moving!</li>
 <li>Create a <code class="python">step</code> callback function and
@@ -120,9 +133,14 @@ style="border: none; background-color:black; width:900px; height:400px; margin:a
     pacman.move(PACMAN_SPEED, 0)
 
 gw.set_interval(step, 20)</code></pre>
+</section></section>
+<section>
+<section id="part-c-bouncing-pacman" class="title-slide slide level1">
+<h1>Part C: Bouncing Pacman</h1>
+
 </section>
-<section id="part-c-bouncing-pacman" class="slide level2">
-<h2>Part C: Bouncing Pacman</h2>
+<section id="flipping-at-the-edges" class="slide level2">
+<h2>Flipping at the edges</h2>
 <div style="font-size:.9em">
 <ul>
 <li>Currently, Pacman will just move off the right side of the screen,
@@ -147,16 +165,16 @@ other direction!</li>
 </ul>
 </div>
 </section>
-<section id="part-c-bouncing-visualized" class="slide level2"
+<section id="bouncing-visualized" class="slide level2"
 data-state="BouncePacmanTrace">
-<h2 data-state="BouncePacmanTrace">Part C: Bouncing Visualized</h2>
+<h2 data-state="BouncePacmanTrace">Bouncing Visualized</h2>
 <div id="PacmanBounceCanvas" class="CTCanvas"
 style="border: none; background-color:black; width:900px; height:400px; margin:auto;">
 
 </div>
 </section>
-<section id="part-c-pseudo-bouncing" class="slide level2">
-<h2>Part C: Pseudo Bouncing</h2>
+<section id="pseudo-bouncing" class="slide level2">
+<h2>Pseudo Bouncing</h2>
 <ul>
 <li>In pseudocode, you might have something like:</li>
 </ul>
@@ -170,8 +188,8 @@ style="border: none; background-color:black; width:900px; height:400px; margin:a
 |||initialize direction variable|||
 gw.set_interval(step, 20)</code></pre>
 </section>
-<section id="part-c-pacman-bounced" class="slide level2">
-<h2>Part C: Pacman Bounced</h2>
+<section id="pacman-bounced" class="slide level2">
+<h2>Pacman Bounced</h2>
 <pre ><code class="mypython" style="max-height: 800px; font-size:.8em">def step():
     pacman.move(gw.dx, 0)
     if (pacman.get_x() + 2 * PACMAN_RADIUS > GW_WIDTH #right edge
@@ -183,9 +201,14 @@ gw.set_interval(step, 20)</code></pre>
 pacman = create_pacman()
 gw.dx = PACMAN_SPEED
 gw.set_interval(step, 20)</code></pre>
+</section></section>
+<section>
+<section id="part-d-hungry-pacman" class="title-slide slide level1">
+<h1>Part D: Hungry Pacman</h1>
+
 </section>
-<section id="part-d-hungry-pacman" class="slide level2">
-<h2>Part D: Hungry Pacman</h2>
+<section id="finding-the-pills" class="slide level2">
+<h2>Finding the Pills</h2>
 <ul>
 <li>At the moment Pacman just moves over the yellow pills: we’d like to
 change that so that they actually disappear as Pacman moves over
@@ -209,8 +232,8 @@ GWindows.</li>
 </ul></li>
 </ul>
 </section>
-<section id="part-d-getting-elements" class="slide level2">
-<h2>Part D: Getting Elements</h2>
+<section id="getting-elements" class="slide level2">
+<h2>Getting Elements</h2>
 <ul>
 <li>You provide <code class="python">.get_element_at(x,y)</code> a pair
 of coordinates, <span class="math inline">\(x\)</span> and <span
@@ -229,8 +252,8 @@ window!</li>
 >>> print(leftmost_pill)
 GOval(20, 190.0, 20, 20)</code></pre>
 </section>
-<section id="part-d-pacmans-mouth" class="slide level2">
-<h2>Part D: Pacman’s Mouth</h2>
+<section id="pacmans-mouth" class="slide level2">
+<h2>Pacman’s Mouth</h2>
 <div class="cols">
 <div class="col" style="font-size:.85em; flex-grow:1.25">
 <ul>
@@ -353,16 +376,16 @@ is the object you are interested in.</li>
 </div>
 </div>
 </section>
-<section id="part-d-hunger-visualized" class="slide level2"
+<section id="hunger-visualized" class="slide level2"
 data-state="HungerPacmanTrace">
-<h2 data-state="HungerPacmanTrace">Part D: Hunger Visualized</h2>
+<h2 data-state="HungerPacmanTrace">Hunger Visualized</h2>
 <div id="PacmanHungerCanvas" class="CTCanvas"
 style="border: none; background-color:black; width:900px; height:400px; margin:auto;">
 
 </div>
 </section>
-<section id="part-d-hunger-satiated" class="slide level2">
-<h2>Part D: Hunger Satiated</h2>
+<section id="hunger-satiated" class="slide level2">
+<h2>Hunger Satiated</h2>
 <pre ><code class="mypython" style="max-height:850px;">def step():
     ...
     # Adjusting for which side mouth is on
@@ -377,6 +400,11 @@ style="border: none; background-color:black; width:900px; height:400px; margin:a
     if obj is not None and obj is not bg:
         gw.remove(obj)
     ...</code></pre>
+</section></section>
+<section>
+<section id="bonus" class="title-slide slide level1">
+<h1>Bonus!</h1>
+
 </section>
 <section id="challenge" class="slide level2"
 data-state="RavenousPacmanTrace">
@@ -394,7 +422,7 @@ opening and closing of the mouth</li>
 style="border: none; background-color:black; width:900px; height:400px; margin:auto;">
 
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
@@ -500,7 +528,7 @@ style="border: none; background-color:black; width:900px; height:400px; margin:a
         // Time before the cursor is hidden (in ms)
         hideCursorTime: 5000,
         // Transition style
-        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
         // Transition speed
         transitionSpeed: 'default', // default/fast/slow
         // Transition style for full page slide backgrounds
