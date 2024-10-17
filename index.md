@@ -47,6 +47,59 @@ content_url: https://github.com/rembold-cs151-master/Section07
 
 :::
 
+## Something to smile about
+
+::::::cols
+::::{.col style='font-size:.9em'}
+<!--- Up until now, we haven't had a way to draw an arc!-->
+- The `GArc` class represents an arc formed by taking a section of the perimeter of an oval.
+- 3 things necessary:
+	- The bounding rectangle geometry (upper left corner and width and height)
+	- The _starting angle_ (in degrees)
+	- The _sweep angle_ (in degrees) which is how far the arc extends
+- Negative angles move in the clockwise direction
+::::
+
+::::col
+
+\begin{tikzpicture}%%width=100%
+\draw[MPurple] (-2,0) -- (2,0) (0,-2) -- (0,2);
+\draw[dashed, MBlue] (-1.5,-1.5) rectangle (1.5, 1.5);
+\draw[ultra thick, MRed, line cap=round] (45:1.5) arc (45:270:1.5);
+
+\draw[MOrange, dashed] (0,0) -- (45:1.5);
+\draw[MOrange, thick, -stealth] (0:1) arc (0:45:1) node[midway,right,font=\scriptsize\sf] {start};
+
+\draw[MGreen, thick, -stealth] (45:0.5) arc (45:270:0.5) node[midway, left, font=\scriptsize\sf] {sweep};
+\end{tikzpicture}
+
+::::
+::::::
+
+
+## Fillable Arcs
+- The `GArc` class is a `GFillableObject`, and so you can call `.set_filled()` on a `GArc` object
+- Filled like a pie-shaped wedge formed between the center of the bounding box and the starting and end points of the arc
+
+::::::cols
+::::col
+```python
+def filled_arc():
+    gw = GWindow(400, 400)
+    arc = GArc(50, 50, 
+			   350, 350, 
+			   90, 135)
+    arc.set_color("orange")
+    arc.set_filled(True)
+    gw.add(arc)
+```
+::::
+
+::::col
+![](./images/FilledArc.png){width=50%}
+::::
+::::::
+
 ## Part A: Pacman Created
 ```{.mypython style='max-height:900px'}
 def create_pacman():

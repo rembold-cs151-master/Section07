@@ -1,0 +1,7 @@
+#!/bin/bash
+
+COUNT=0
+for file in svg_cache/*; do
+	! rg -q $file ../*.html && rm $file && ((COUNT+=1))
+done
+echo Cleaned up $COUNT files.
