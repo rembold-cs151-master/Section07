@@ -88,6 +88,58 @@ properly centered</li>
 <p><img data-src="./images/pacman_present.png" class="fragment" /></p>
 </div>
 </section>
+<section id="something-to-smile-about" class="slide level2">
+<h2>Something to smile about</h2>
+<div class="cols">
+<div class="col" style="font-size:.9em">
+<!--- Up until now, we haven't had a way to draw an arc!-->
+<ul>
+<li>The <code class="python">GArc</code> class represents an arc formed
+by taking a section of the perimeter of an oval.</li>
+<li>3 things necessary:
+<ul>
+<li>The bounding rectangle geometry (upper left corner and width and
+height)</li>
+<li>The <em>starting angle</em> (in degrees)</li>
+<li>The <em>sweep angle</em> (in degrees) which is how far the arc
+extends</li>
+</ul></li>
+<li>Negative angles move in the clockwise direction</li>
+</ul>
+</div>
+<div class="col">
+<p><img
+data-src="./images/svg_cache/568c4310834f76d9a4b710159f6c6cd65c6a7d0b.svg"
+style="width:100.0%" /></p>
+</div>
+</div>
+</section>
+<section id="fillable-arcs" class="slide level2">
+<h2>Fillable Arcs</h2>
+<ul>
+<li>The <code class="python">GArc</code> class is a
+<code class="python">GFillableObject</code>, and so you can call
+<code class="python">.set_filled()</code> on a
+<code class="python">GArc</code> object</li>
+<li>Filled like a pie-shaped wedge formed between the center of the
+bounding box and the starting and end points of the arc</li>
+</ul>
+<div class="cols">
+<div class="col">
+<pre ><code class="python">def filled_arc():
+    gw = GWindow(400, 400)
+    arc = GArc(50, 50, 
+               350, 350, 
+               90, 135)
+    arc.set_color("orange")
+    arc.set_filled(True)
+    gw.add(arc)</code></pre>
+</div>
+<div class="col">
+<p><img data-src="./images/FilledArc.png" style="width:50.0%" /></p>
+</div>
+</div>
+</section>
 <section id="part-a-pacman-created" class="slide level2">
 <h2>Part A: Pacman Created</h2>
 <pre ><code class="mypython" style="max-height:900px">def create_pacman():
