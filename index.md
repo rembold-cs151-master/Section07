@@ -1,7 +1,7 @@
 ---
 title: "Section 07: Breaking Out Pacman"
 author: Jed Rembold and Eric Roberts
-date: "Week of October 14th"
+date: "Week of March 3rd"
 slideNumber: true
 theme: monokai
 highlightjs-theme: monokai
@@ -30,12 +30,12 @@ content_url: https://github.com/rembold-cs151-master/Section07
   - Implementing bouncing off the walls
   - Getting Pacman to "eat" the pills as he moves
   - (Optional) Getting Pacman's mouth to gobble as he moves
-- These same tasks will also prove highly valuable when working through the Breakout Project!
+- The solutions to these tasks will also prove _highly useful_ when working through the Breakout Project!
 
 # Part A: Creating Pacman
 
 ## Creating the Shape
-- The template file automatically creates the scene to below when run
+- The template file automatically creates the scene below when run
 - Your initial task is to add the classic yellow Pacman shape to the center of the screen
   - Consists of a circle missing a 90 deg segment centered on the positive x-axis
 - Recall when working with `GArc`s how you need to specify the location! That will be important for getting Pacman properly centered
