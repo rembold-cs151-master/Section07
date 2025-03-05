@@ -175,7 +175,7 @@ def step():
         or pacman.get_x() < 0 #left edge
        ):
         gw.dx *= -1 #flip it
-        pacman.set_start_angle(pacman.get_start_angle() + 180)
+        pacman.set_start_angle((pacman.get_start_angle() + 180) % 360)
 
 pacman = create_pacman()
 gw.dx = PACMAN_SPEED
@@ -248,4 +248,33 @@ def step():
 - You'll need to adjust both angles in tandem to achieve a symmetric opening and closing of the mouth
 
 <div id="PacmanRavenousCanvas" class="CTCanvas" 
-  style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
+    style="border: none; background-color:black; width:900px; height:400px; margin:auto;"></div>
+
+## Gobbling Glory
+```{.mypython style='max-height:850px'}
+MOUTH_SPEED = 5
+
+def step():
+    ...
+
+    # Gobble
+    pacman.set_start_angle(
+        pacman.get_start_angle() + gw.mouth
+    )
+    pacman.set_sweep_angle(
+        pacman.get_sweep_angle() - 2 * gw.mouth
+    )
+    if gw.vel > 0: #right
+        if (pacman.get_start_angle() < MOUTH_SPEED or
+            pacman.get_start_angle() > 45):
+            gw.mouth *= -1
+    else: #left
+        if (pacman.get_start_angle() < 180 + MOUTH_SPEED or
+            pacman.get_start_angle() > (180+45)):
+            gw.mouth *= -1
+
+    ...
+
+gw.mouth = -MOUTH_SPEED
+
+```
