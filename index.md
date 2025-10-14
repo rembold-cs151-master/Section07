@@ -1,7 +1,7 @@
 ---
 title: "Section 07: Breaking Out Pacman"
 author: Jed Rembold and Eric Roberts
-date: "Week of March 3rd"
+date: "Week of October 13th"
 slideNumber: true
 theme: monokai
 highlightjs-theme: monokai
