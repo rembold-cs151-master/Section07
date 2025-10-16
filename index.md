@@ -146,7 +146,7 @@ gw.set_interval(step, 20)
   - This will need to be updated or set within the `step` callback function, so it **must** be added as an attribute to the `GWindow` (called `gw` here)
 - Update the movement in your `step` function to use this new variable
 - Add a conditional check to see if an edge of Pacman has extended beyond an edge of the screen, and reverse the direction if so
-- You can also use the `set_starting_angle` and `get_starting_angle` methods for `GArc`s to flip Pacman around to face the other direction!
+- You can also use the `set_start_angle` and `get_start_angle` methods for `GArc`s to flip Pacman around to face the other direction!
 :::
 
 ## Bouncing Visualized {data-state="BouncePacmanTrace"}
