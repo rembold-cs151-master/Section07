@@ -1,10 +1,10 @@
 ---
 title: "Section 07: Breaking Out Pacman"
 author: Jed Rembold and Eric Roberts
-date: "Week of October 13th"
+date: "Week of March 2nd"
 slideNumber: true
-theme: monokai
-highlightjs-theme: monokai
+theme: python_catppuccin
+highlightjs-theme: catppuccin-mocha
 width: 1920
 height: 1080
 transition: slide
@@ -141,7 +141,7 @@ gw.set_interval(step, 20)
 # Part C: Bouncing Pacman
 ## Flipping at the edges
 :::{style='font-size:.9em'}
-- Currently, Pacman will just move off the right side of the screen, which is not ideal. Instead we want Pacman to reverse direction at the wall
+- Currently, Pacman will just move off the right side of the screen, which is not ideal. Instead, we want Pacman to reverse direction at the wall
 - Will thus need to keep track of Pacman's current direction somehow
   - This will need to be updated or set within the `step` callback function, so it **must** be added as an attribute to the `GWindow` (called `gw` here)
 - Update the movement in your `step` function to use this new variable
@@ -175,7 +175,9 @@ def step():
         or pacman.get_x() < 0 #left edge
        ):
         gw.dx *= -1 #flip it
-        pacman.set_start_angle((pacman.get_start_angle() + 180) % 360)
+        pacman.set_start_angle(
+          (pacman.get_start_angle() + 180) % 360
+        )
 
 pacman = create_pacman()
 gw.dx = PACMAN_SPEED
@@ -198,11 +200,11 @@ gw.set_interval(step, 20)
   - If there is a `GObject` at that location, it will return it to you! So save that object in a variable!
   - If there is no object at that location, it will return `None`
 - You can then use any returned object exactly as you would had you assigned it to a variable initially, including removing it from the window!
-```mypython
->>> leftmost_pill = gw.get_element_at(20, 200)
->>> print(leftmost_pill)
-GOval(20, 190.0, 20, 20)
-```
+  ```mypython
+  >>> leftmost_pill = gw.get_element_at(20, 200)
+  >>> print(leftmost_pill)
+  GOval(20, 190.0, 20, 20)
+  ```
 
 ## Pacman's Mouth
 ::::::cols
